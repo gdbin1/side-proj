@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gbk.sideproj.mapper.FavoriteMapper">
+
+    <select id="existsFavorite" resultType="int">
+        SELECT COUNT(*) FROM favorite
+        WHERE user_id = #{userId}
+          AND plnm_no = #{plnmNo}
+          AND pbct_no = #{pbctNo}
+    </select>
+
+    <insert id="insertFavorite">
+        INSERT INTO favorite (user_id, plnm_no, pbct_no)
+        VALUES (#{userId}, #{plnmNo}, #{pbctNo})
+    </insert>
+
+    <delete id="deleteFavorite">
+        DELETE FROM favorite
+        WHERE user_id = #{userId}
+          AND plnm_no = #{plnmNo}
+          AND pbct_no = #{pbctNo}
+    </delete>
+
+    
+   <select id="selectUserFavorites" resultType="com.gbk.sideproj.domain.WebItem">
+    SELECT w.*
+    FROM favorite f
+    JOIN webitem w ON f.plnm_no = w.plnmNo AND f.pbct_no = w.pbctNo
+    WHERE f.user_id = #{userId}
+    ORDER BY f.created_at DESC
+	</select>
+
+
+
+</mapper>

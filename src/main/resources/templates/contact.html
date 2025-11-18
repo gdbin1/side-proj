@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>고객센터</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #f5f8fb;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      text-align: center;
+      padding: 60px 20px 30px;
+      background: linear-gradient(135deg, #69b3f3, #4fc3a1);
+      color: white;
+      border-bottom-left-radius: 30px;
+      border-bottom-right-radius: 30px;
+    }
+
+    main {
+      max-width: 700px;
+      margin: 40px auto;
+      background: white;
+      padding: 40px 50px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    form label {
+      display: block;
+      margin-top: 18px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    form input, form textarea {
+      width: 100%;
+      padding: 13px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 15px;
+      box-sizing: border-box;
+    }
+
+    /* 전역 button 스타일 (기존) */
+    button {
+      margin-top: 25px;
+      width: 100%;
+      background: linear-gradient(90deg, #4fc3a1, #69b3f3);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 17px;
+      cursor: pointer;
+    }
+
+    /* 팝업 스타일 */
+    #loginPopup {
+      display: none; /* JS에서 'flex'로 열림 */
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .popup-content {
+      background: white;
+      border-radius: 12px;
+      padding: 30px 40px;
+      width: 340px;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    .popup-content h3 {
+      margin: 6px 0 14px 0;
+      color: #333;
+      font-size: 18px;
+    }
+
+    .popup-content p {
+      margin-bottom: 20px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .popup-content a {
+      display: inline-block;
+      background: #4fc3a1;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+    }
+
+    .popup-content a:hover {
+      opacity: 0.9;
+    }
+
+    /* 닫기(X) 버튼 — 전역 button 규칙보다 우선 적용되도록 구체성 높임 */
+    .popup-content .close-btn {
+      position: absolute !important;
+      top: 10px !important;
+      right: 12px !important;
+      width: 36px !important;
+      height: 36px !important;
+      padding: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 18px !important;
+      line-height: 1 !important;
+      border-radius: 8px !important;
+      background: transparent !important;
+      border: none !important;
+      color: #666 !important;
+      cursor: pointer !important;
+      box-shadow: none !important;
+    }
+
+    .popup-content .close-btn:hover {
+      color: #222 !important;
+      background: rgba(0,0,0,0.04) !important;
+    }
+
+    /* success/message 스타일 (optional) */
+    .success-message {
+      text-align: center;
+      color: #2ecc71;
+      margin-top: 18px;
+      font-weight: 600;
+    }
+
+    .back-home { text-align:center; margin-top:18px; }
+    .back-home a { color:#0078d7; text-decoration:none; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>💬 고객센터 문의</h1>
+  <p>궁금하신 점이나 불편사항이 있으신가요?<br>아래 양식을 통해 언제든지 문의해 주세요.</p>
+</header>
+
+<main>
+  <form id="contactForm" th:action="@{/contact}" method="post">
+    <label for="name">이름</label>
+    <input type="text" id="name" name="name" placeholder="이름을 입력하세요" required>
+
+    <label for="email">이메일</label>
+    <input type="email" id="email" name="email" placeholder="이메일 주소를 입력하세요" required>
+
+    <label for="title">제목</label>
+    <input type="text" id="title" name="title" placeholder="제목을 입력하세요" required>
+
+    <label for="content">문의 내용</label>
+    <textarea id="content" name="content" placeholder="문의 내용을 작성해주세요" required></textarea>
+
+    <button type="submit">문의하기</button>
+  </form>
+
+  <p th:if="${success}" class="success-message" th:text="${success}"></p>
+  <p th:if="${message}" class="success-message" style="color:red;" th:text="${message}"></p>
+
+  <div class="back-home">
+    <a href="/">← 메인으로 돌아가기</a>
+  </div>
+</main>
+
+<!-- 로그인 유도 팝업 -->
+<div id="loginPopup" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="popup-content">
+    <button type="button" class="close-btn" id="closePopup" aria-label="닫기">✕</button>
+    <h3>로그인이 필요합니다</h3>
+    <p>문의하기는 로그인 후 이용하실 수 있습니다.</p>
+    <a href="/user/login">로그인 하러가기</a>
+  </div>
+</div>
+
+<!-- JS: 안전하게 작동하도록 Thymeleaf inline 대신 주석형 치환 사용 -->
+<script th:inline="javascript">
+/* isLoggedIn 변수를 서버에서 주입하지 못하면 false로 안전하게 동작하도록 주석형 치환 사용 */
+const isLoggedIn = /*[[${session.loginUser != null}]]*/ false;
+
+const contactForm = document.getElementById('contactForm');
+const loginPopup = document.getElementById('loginPopup');
+const closePopup = document.getElementById('closePopup');
+
+contactForm.addEventListener('submit', function(e) {
+  if (!isLoggedIn) {
+    e.preventDefault();
+    loginPopup.style.display = 'flex';
+    loginPopup.setAttribute('aria-hidden', 'false');
+  }
+});
+
+closePopup.addEventListener('click', function() {
+  loginPopup.style.display = 'none';
+  loginPopup.setAttribute('aria-hidden', 'true');
+});
+</script>
+
+</body>
+</html>

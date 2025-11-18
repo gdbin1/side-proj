@@ -1,0 +1,234 @@
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+    font-family: "Noto Sans KR", sans-serif;
+    background: #f0f2f5;
+    color: #333;
+}
+
+/* HEADER */
+.header {
+    background: white;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-inner {
+    max-width: 1300px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 30px;
+    align-items: center;
+}
+
+.logo {
+    width: 42px;
+}
+.logo-area {
+    display: flex;
+    align-items: center;
+}
+.logo-text {
+    font-size: 20px;
+    font-weight: 700;
+    margin-left: 10px;
+}
+
+/* NAVIGATION */
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 18px;
+}
+
+.nav a {
+    text-decoration: none;
+    color: #333;
+    font-size: 15px;
+}
+.nav a:hover { color: #0078ff; }
+
+/* 로그인/회원가입 & 사용자 영역 */
+.user-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.welcome-text {
+    color: #444;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* 로그인/로그아웃 버튼 */
+.login-btn, .logout-btn {
+    background-color: #b14cff;
+    color: #fff !important;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+.login-btn:hover, .logout-btn:hover {
+    background-color: #8c3ad9;
+}
+
+
+
+/* HERO BANNER */
+.hero {
+    position: relative;
+    height: 420px;
+    background: url("/image/banner.jpg") center/cover no-repeat, linear-gradient(135deg, #0057d8, #00a6fb);
+}
+
+.hero-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+}
+
+.hero-content {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -55%);
+    text-align: center;
+    color: white;
+}
+
+.hero-content h1 {
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+.hero-content p {
+    margin-top: 12px;
+    font-size: 18px;
+    opacity: 0.9;
+}
+
+.cta-btn {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 14px 24px;
+    background: #00a6fb;
+    border-radius: 8px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 600;
+}
+.cta-btn:hover { background:#0088d6; }
+
+
+
+/* SERVICE HIGHLIGHT */
+.service-highlight {
+    padding: 70px 10%;
+    background: #fff;
+}
+
+.highlight-grid {
+    display: flex;
+    justify-content: space-between;
+}
+
+.highlight-card {
+    width: 32%;
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.09);
+    text-align: center;
+}
+
+.highlight-img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.highlight-card h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+
+
+/* RECENT LIST */
+.recent-list-section {
+    padding: 70px 10%;
+}
+
+.recent-list-section h2 {
+    text-align: center;
+    font-size: 26px;
+    margin-bottom: 40px;
+}
+
+.recent-grid {
+    display: flex;
+    justify-content: space-between;
+}
+
+.recent-card {
+    width: 30%;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    box-shadow: 0 1px 12px rgba(0,0,0,0.06);
+}
+
+.recent-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.recent-price {
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.status {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.status-blue { background:#e3f1ff; color:#0078ff; }
+.status-green { background:#e8fff3; color:#00aa5b; }
+
+.more-list-btn {
+    display: block;
+    margin: 25px auto 0;
+    text-align: center;
+    color: #0078ff;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+
+
+/* FOOTER */
+.footer {
+    margin-top: 70px;
+    background: #333;
+    padding: 25px;
+    color: #fff;
+    text-align: center;
+}

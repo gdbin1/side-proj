@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gbk.sideproj.mapper.WebItemDetailMapper">
+
+    <!-- 단건 Insert -->
+    <insert id="insert" parameterType="com.gbk.sideproj.domain.WebItemDetail">
+        INSERT INTO webItemDetail (
+            plnmNo, pbctNo, rnum, pbctCdtnNo, cltrNo, cltrHstrNo,
+            scrnGrpCd, ctgrFullNm, bidMnmtNo, cltrNm, cltrMnmtNo,
+            ldnmAdrs, nmrdAdrs, ldnmPnu, dpslMtdCd, dpslMtdNm,
+            bidMtdNm, minBidPrc, apslAsesAvgAmt, feeRate,
+            pbctBegnDtm, pbctClsDtm, pbctCltrStatNm, uscbCnt, iqryCnt,
+            goodsNm, cltrImgFiles
+        )
+        VALUES (
+            #{plnmNo}, #{pbctNo}, #{rnum}, #{pbctCdtnNo}, #{cltrNo}, #{cltrHstrNo},
+            #{scrnGrpCd}, #{ctgrFullNm}, #{bidMnmtNo}, #{cltrNm}, #{cltrMnmtNo},
+            #{ldnmAdrs}, #{nmrdAdrs}, #{ldnmPnu}, #{dpslMtdCd}, #{dpslMtdNm},
+            #{bidMtdNm}, #{minBidPrc}, #{apslAsesAvgAmt}, #{feeRate},
+            #{pbctBegnDtm}, #{pbctClsDtm}, #{pbctCltrStatNm}, #{uscbCnt}, #{iqryCnt},
+            #{goodsNm}, #{cltrImgFiles}
+        )
+    </insert>
+
+    <!-- 단건 조회 -->
+    <select id="findByKeys" resultType="com.gbk.sideproj.domain.WebItemDetail">
+        SELECT *
+        FROM webItemDetail
+        WHERE plnmNo = #{plnmNo}
+        AND pbctNo = #{pbctNo}
+        ORDER BY rnum ASC
+        LIMIT 1
+    </select>
+
+    <!-- 🔥 특정 물건의 모든 상세 이력 조회 (신규) -->
+    <select id="findAllByKeys" resultType="com.gbk.sideproj.domain.WebItemDetail">
+        SELECT *
+        FROM webItemDetail
+        WHERE plnmNo = #{plnmNo}
+        AND pbctNo = #{pbctNo}
+        ORDER BY rnum ASC
+    </select>
+
+    <!-- 전체 삭제 (옵션) -->
+    <delete id="deleteAll">
+        DELETE FROM webItemDetail
+    </delete>
+
+    <!-- 단일 상세 삭제 -->
+    <delete id="deleteByKeys">
+        DELETE FROM webItemDetail
+        WHERE plnmNo = #{plnmNo}
+        AND pbctNo = #{pbctNo}
+    </delete>
+
+    <!-- 🔥 특정 물건의 모든 상세 이력 삭제 (신규) -->
+    <delete id="deleteAllByItem">
+        DELETE FROM webItemDetail
+        WHERE plnmNo = #{plnmNo}
+        AND pbctNo = #{pbctNo}
+    </delete>
+
+</mapper>

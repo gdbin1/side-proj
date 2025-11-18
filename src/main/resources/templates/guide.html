@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>입찰 안내</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      background: #f7f9fc;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+    main {
+      max-width: 850px;
+      margin: 50px auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 40px;
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+    header h1 {
+      text-align: center;
+      font-size: 2rem;
+      color: #1a73e8;
+    }
+    .back-home {
+      display: block;
+      text-align: right;
+      margin-top: -30px;
+      font-size: 0.9rem;
+    }
+
+    /* 타임라인 스타일 */
+    .timeline {
+      position: relative;
+      margin: 40px 0;
+      padding-left: 30px;
+      border-left: 3px solid #1a73e8;
+    }
+    .timeline .step {
+      margin-bottom: 30px;
+      position: relative;
+      padding-left: 20px;
+    }
+    .timeline .step::before {
+      content: '';
+      position: absolute;
+      left: -11px;
+      top: 5px;
+      width: 18px;
+      height: 18px;
+      background: #1a73e8;
+      border-radius: 50%;
+    }
+    .step h3 {
+      font-size: 1.2rem;
+      color: #1a73e8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .step p {
+      margin-left: 25px;
+      color: #555;
+    }
+    section {
+      margin-bottom: 40px;
+    }
+    h2 {
+      border-bottom: 2px solid #1a73e8;
+      padding-bottom: 5px;
+      color: #1a73e8;
+      margin-bottom: 15px;
+    }
+    ul {
+      list-style-type: none;
+      margin-left: 10px;
+    }
+    ul li::before {
+      content: '✅ ';
+    }
+    p, li {
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+<header class="top-header">
+  <h1><i class="fa-solid fa-gavel"></i> 입찰 안내</h1>
+  <a href="/" class="back-home">← 메인으로</a>
+</header>
+
+<main>
+  <section>
+    <h2><i class="fa-solid fa-list-ol"></i> 입찰 절차</h2>
+    <div class="timeline">
+      <div class="step">
+        <h3><i class="fa-solid fa-user-plus"></i> 1단계: 회원가입 및 로그인</h3>
+        <p>공매 물건을 조회하고 상세 정보를 확인합니다.</p>
+      </div>
+      <div class="step">
+        <h3><i class="fa-solid fa-search"></i> 2단계: 물건 검색 및 선택</h3>
+        <p>온비드(https://www.onbid.co.kr) 사이트에서 실제 입찰을 진행합니다.</p>
+      </div>
+      <div class="step">
+        <h3><i class="fa-solid fa-coins"></i> 3단계: 입찰 참여 및 보증금 납부</h3>
+        <p>입찰 시 보증금을 납부하고 입찰가를 입력합니다.</p>
+      </div>
+      <div class="step">
+        <h3><i class="fa-solid fa-scroll"></i> 4단계: 낙찰 및 계약 절차</h3>
+        <p>낙찰 시 잔금 납부 후 소유권 이전 절차를 진행합니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2><i class="fa-solid fa-triangle-exclamation"></i> 입찰 시 유의사항</h2>
+    <ul>
+      <li>회원 로그인 후에만 입찰이 가능합니다.</li>
+      <li>입찰 등록 후에는 취소가 불가능합니다.</li>
+      <li>보증금을 납부하지 않으면 입찰이 무효 처리됩니다.</li>
+      <li>입찰 시간 마감 이후에는 제출이 불가합니다.</li>
+      <li>낙찰 후 기한 내 대금을 미납하면 계약이 취소될 수 있습니다.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><i class="fa-solid fa-info-circle"></i> 참고 안내</h2>
+    <p>
+      본 사이트는 경기도 내 공매 정보를 수집하여 제공합니다.<br>
+      실제 입찰은 공공데이터 제공기관인 <strong>온비드(Onbid)</strong>를 통해 이루어집니다.<br>
+      입찰과 관련된 법적 효력은 온비드의 공고를 기준으로 합니다.
+    </p>
+  </section>
+
+  <section>
+    <h2><i class="fa-solid fa-headset"></i> 문의</h2>
+    <p>
+      입찰 관련 문의는 한국자산관리공사 온비드 고객센터(☎1588-5321)를 이용하시거나,<br>
+      본 사이트의 <a href="/contact">고객센터</a> 페이지를 참고해주세요.
+    </p>
+  </section>
+</main>
+
+</body>
+</html>

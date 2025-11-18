@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>찜 목록</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="top-header">
+  <h1>⭐ 나의 찜 목록</h1>
+  <a href="/" style="float:right; margin-top:-40px;">← 메인으로</a>
+</header>
+
+<main>
+  <div class="item-list">
+    <div th:if="${favorites == null or #lists.isEmpty(favorites)}" class="empty">
+      찜한 공매가 없습니다.
+    </div>
+
+    <div class="card" th:each="item : ${favorites}">
+      <div class="thumb">
+        <img th:if="${item.imgUrl != null and item.imgUrl != ''}" th:src="${item.imgUrl}" alt="물건 이미지">
+        <div th:if="${item.imgUrl == null or item.imgUrl == ''}" class="thumb-fallback">NO IMAGE</div>
+      </div>
+
+      <div class="info">
+        <div class="title" th:text="${item.cltrNm}">물건명</div>
+        <div class="addr" th:text="${item.ldnAdrs}">주소</div>
+        <div class="price-row">
+          <span class="label">감정가</span>
+          <span th:text="${#numbers.formatInteger(item.apslAsesAmt, 3, 'COMMA')} + '원'">0원</span>
+        </div>
+        <div class="price-row">
+          <span class="label">최저입찰가</span>
+          <span class="price min" th:text="${#numbers.formatInteger(item.minBidPrc, 3, 'COMMA')} + '원'">0원</span>
+        </div>
+        <div class="meta">
+          <span class="status-badge" th:text="${item.pbctStatNm}">상태</span>
+        </div>
+
+        <!-- ✅ 찜 취소 버튼 추가 -->
+        <button class="remove-btn"
+                th:data-plnmno="${item.plnmNo}"
+                th:data-pbctno="${item.pbctNo}">
+          찜 취소
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ✅ JS: 찜 취소 기능 -->
+<script>
+document.querySelectorAll('.remove-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const plnmNo = this.dataset.plnmno;
+    const pbctNo = this.dataset.pbctno;
+
+    if (!confirm("정말로 찜을 취소하시겠습니까?")) return;
+
+    fetch('/favorite/remove', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ plnmNo, pbctNo })
+    })
+    .then(res => res.text())
+    .then(msg => {
+      alert(msg);
+      // 새로고침 없이 카드만 제거
+      this.closest('.card').remove();
+
+      // 모든 카드가 사라지면 '찜한 공매가 없습니다' 문구 표시
+      if (document.querySelectorAll('.card').length === 0) {
+        document.querySelector('.item-list').innerHTML =
+          '<div class="empty">찜한 공매가 없습니다.</div>';
+      }
+    })
+    .catch(err => {
+      alert("서버 오류가 발생했습니다.");
+      console.error(err);
+    });
+  });
+});
+</script>
+
+</body>
+</html>

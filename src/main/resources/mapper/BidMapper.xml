@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.gbk.sideproj.mapper.BidMapper">
+
+    <!-- 입찰 저장 -->
+    <insert id="insertBid" parameterType="com.gbk.sideproj.domain.Bid">
+        INSERT INTO bid (
+            user_id, plnm_no, pbct_no, item_name,
+            min_bid_price, bid_price, bid_time, status
+        )
+        VALUES (
+            #{userId},
+            #{plnmNo},
+            #{pbctNo},
+            #{itemName},
+            #{minBidPrice},
+            #{bidPrice},
+            NOW(),
+            #{status}
+        )
+    </insert>
+
+    <!-- 사용자별 입찰 내역 조회 -->
+    <select id="findByUserId"
+            resultType="com.gbk.sideproj.domain.Bid">
+        SELECT
+            id,
+            user_id AS userId,
+            plnm_no AS plnmNo,
+            pbct_no AS pbctNo,
+            item_name AS itemName,
+            min_bid_price AS minBidPrice,
+            bid_price AS bidPrice,
+            bid_time AS bidTime,
+            status
+        FROM bid
+        WHERE user_id = #{userId}
+        ORDER BY bid_time DESC
+    </select>
+
+</mapper>

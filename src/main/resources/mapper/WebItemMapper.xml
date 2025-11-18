@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gbk.sideproj.mapper.WebItemMapper">
+
+    <!-- 결과 매핑 -->
+    <resultMap id="WebItemMap" type="com.gbk.sideproj.domain.WebItem">
+        <id property="id" column="id"/>
+        <result property="plnmNo" column="plnmNo"/>
+        <result property="pbctNo" column="pbctNo"/>
+        <result property="cltrNm" column="cltrNm"/>
+        <result property="ldnAdrs" column="ldnAdrs"/>
+        <result property="apslAsesAmt" column="apslAsesAmt"/>
+        <result property="minBidPrc" column="minBidPrc"/>
+        <result property="pbctBegnDtm" column="pbctBegnDtm"/>
+        <result property="pbctClsDtm" column="pbctClsDtm"/>
+        <result property="pbctStatNm" column="pbctStatNm"/>
+        <result property="imgUrl" column="imgUrl"/>
+        <result property="onbdUrl" column="onbdUrl"/>
+    </resultMap>
+
+    <!-- Upsert -->
+    <insert id="upsert"
+            useGeneratedKeys="true"
+            keyProperty="id"
+            parameterType="com.gbk.sideproj.domain.WebItem">
+        INSERT INTO webItem
+        (plnmNo, pbctNo, cltrNm, ldnAdrs, apslAsesAmt, minBidPrc,
+         pbctBegnDtm, pbctClsDtm, pbctStatNm, imgUrl, onbdUrl)
+        VALUES
+        (#{plnmNo}, #{pbctNo}, #{cltrNm}, #{ldnAdrs}, #{apslAsesAmt}, #{minBidPrc},
+         #{pbctBegnDtm}, #{pbctClsDtm}, #{pbctStatNm}, #{imgUrl}, #{onbdUrl})
+        ON DUPLICATE KEY UPDATE
+            cltrNm = VALUES(cltrNm),
+            ldnAdrs = VALUES(ldnAdrs),
+            apslAsesAmt = VALUES(apslAsesAmt),
+            minBidPrc = VALUES(minBidPrc),
+            pbctBegnDtm = VALUES(pbctBegnDtm),
+            pbctClsDtm = VALUES(pbctClsDtm),
+            pbctStatNm = VALUES(pbctStatNm),
+            imgUrl = VALUES(imgUrl),
+            onbdUrl = VALUES(onbdUrl)
+    </insert>
+
+    <!-- 중복 PK 고려한 단건 조회 -->
+    <select id="findByPkList" resultMap="WebItemMap" parameterType="map">
+        SELECT *
+        FROM webItem
+        WHERE plnmNo = #{plnmNo}
+          AND pbctNo = #{pbctNo}
+    </select>
+
+    <!-- 전체 조회 -->
+    <select id="findAll" resultMap="WebItemMap">
+        SELECT *
+        FROM webItem
+        ORDER BY pbctBegnDtm ASC
+    </select>
+
+    <!-- PK 조회 -->
+    <select id="findAllPk" resultType="map">
+        SELECT plnmNo, pbctNo
+        FROM webItem
+    </select>
+
+    <!-- 전체 삭제 -->
+    <delete id="deleteAll">
+        DELETE FROM webItem
+    </delete>
+
+    <!-- 일괄 삽입 -->
+    <insert id="insertItems" parameterType="java.util.List">
+        INSERT INTO webItem
+        (plnmNo, pbctNo, cltrNm, ldnAdrs, apslAsesAmt, minBidPrc,
+         pbctBegnDtm, pbctClsDtm, pbctStatNm, imgUrl, onbdUrl)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.plnmNo}, #{item.pbctNo}, #{item.cltrNm}, #{item.ldnAdrs}, #{item.apslAsesAmt}, #{item.minBidPrc},
+             #{item.pbctBegnDtm}, #{item.pbctClsDtm}, #{item.pbctStatNm}, #{item.imgUrl}, #{item.onbdUrl})
+        </foreach>
+    </insert>
+
+    <!-- 팝업용 JOIN 데이터 (Controller에서 필요한 필드만 정확히 가져오기) -->
+    <select id="findItemWithDetails" resultType="map" parameterType="string">
+        SELECT 
+            w.plnmNo, w.pbctNo, w.cltrNm, w.ldnAdrs, w.apslAsesAmt, w.minBidPrc,
+            w.pbctBegnDtm, w.pbctClsDtm, w.pbctStatNm,
+            d.ctgrFullNm, d.nmrdAdrs, d.dpslMtdNm, d.bidMtdNm, 
+            d.apslAsesAvgAmt, d.feeRate, d.goodsNm, d.cltrImgFiles
+        FROM webItem w
+        LEFT JOIN webItemDetail d
+            ON w.plnmNo = d.plnmNo AND w.pbctNo = d.pbctNo
+        WHERE w.cltrNm = #{cltrNm}
+        ORDER BY d.pbctBegnDtm DESC
+    </select>
+
+</mapper>

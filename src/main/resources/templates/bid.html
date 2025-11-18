@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>입찰하기</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+    <script defer th:src="@{/js/script.js}"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background: #f2f4f7;
+            margin: 0;
+            padding: 40px 0;
+        }
+
+        .bid-container {
+            max-width: 520px;
+            margin: 0 auto;
+            padding: 35px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0px 6px 18px rgba(0,0,0,0.10);
+        }
+
+        .bid-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #222;
+            margin-bottom: 8px;
+        }
+
+        .bid-subtitle {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        .input-group {
+            margin-bottom: 22px;
+        }
+
+        .input-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+
+        input[type="number"]:focus {
+            border-color: #5673ff;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(86, 115, 255, 0.2);
+        }
+
+        .bid-button {
+            width: 100%;
+            padding: 16px;
+            background: #5673ff;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 700;
+            transition: .2s;
+        }
+
+        .bid-button:hover {
+            background: #3a54e0;
+        }
+
+        .info-box {
+            margin-top: 25px;
+            padding: 18px;
+            background: #f9fafc;
+            border-radius: 12px;
+            border: 1px solid #eee;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .info-label {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .info-value {
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+<div class="bid-container">
+
+    <!-- 제목 -->
+    <div class="bid-title">입찰하기</div>
+    <div class="bid-subtitle">
+        아래 정보를 확인 후 입찰가를 입력해 진행해주세요.
+    </div>
+
+    <!-- 정보 박스 -->
+    <div class="info-box">
+        <div class="info-row">
+            <div class="info-label">물건명</div>
+            <div class="info-value" th:text="${itemName}">-</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">최소 입찰가</div>
+            <div class="info-value" th:text="${#numbers.formatInteger(minBidPrice, 3, 'COMMA')} + ' 원'">-</div>
+        </div>
+    </div>
+
+    <!-- 입찰 금액 입력 -->
+    <div class="input-group">
+        <label class="input-label">입찰 금액</label>
+        <input type="number" id="bidPriceInput" placeholder="입찰할 금액을 입력하세요">
+    </div>
+
+    <!-- 버튼 -->
+    <button class="bid-button" onclick="submitBid()">입찰하기</button>
+</div>
+
+<script>
+    async function submitBid() {
+        const bidPrice = document.getElementById("bidPriceInput").value;
+        const plnmNo   = "[[${plnmNo}]]";
+        const pbctNo   = "[[${pbctNo}]]";
+        const itemName = "[[${itemName}]]";
+        const minBid   = "[[${minBidPrice}]]";
+
+        if (!bidPrice || bidPrice.trim() === "") {
+            Swal.fire({
+                icon: "warning",
+                title: "입찰가를 입력해주세요.",
+                confirmButtonText: "확인"
+            });
+            return;
+        }
+
+        if (parseInt(bidPrice) < parseInt(minBid)) {
+            Swal.fire({
+                icon: "error",
+                title: "최소 입찰가보다 낮습니다.",
+                text: "최소 입찰가 이상으로 입력해주세요.",
+                confirmButtonText: "확인"
+            });
+            return;
+        }
+
+        const response = await fetch("/api/bid", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body:
+                `plnmNo=${plnmNo}` +
+                `&pbctNo=${pbctNo}` +
+                `&itemName=${encodeURIComponent(itemName)}` +
+                `&minBidPrice=${minBid}` +
+                `&bidPrice=${bidPrice}`
+        });
+
+        const result = await response.text();
+
+        if (result === "NOT_LOGIN") {
+            Swal.fire({
+                icon: "warning",
+                title: "로그인 후 이용해주세요.",
+                confirmButtonText: "확인"
+            });
+            return;
+        }
+
+		if (result === "OK") {
+		    Swal.fire({
+		        icon: "success",
+		        title: "입찰 완료",
+		        text: "입찰이 정상적으로 접수되었습니다!",
+		        showCancelButton: true,
+		        confirmButtonText: "확인",
+		        cancelButtonText: "메인으로 이동",
+		        reverseButtons: true
+		    }).then((res) => {
+		        if (res.dismiss === Swal.DismissReason.cancel) {
+		            location.href = "/";
+		        }
+		    });
+		    return;
+        }
+
+		Swal.fire({
+		    icon: "error",
+		    title: "입찰 실패",
+		    text: result,
+		    confirmButtonText: "확인"
+		});
+    }
+</script>
+
+
+</body>
+</html>

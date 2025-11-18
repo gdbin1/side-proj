@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>경기도 공매 서비스</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        /* 버튼 기본 스타일 (main.css에 이미 유사한 게 있다면 중복 제거 가능) */
+        .user-area button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 14px;
+            margin-left: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+        }
+
+        .user-area button:hover {
+            background-color: #0056b3;
+        }
+
+        .welcome-text {
+            font-weight: bold;
+            color: #333;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ✅ HEADER -->
+<header class="header">
+    <div class="header-inner">
+        <!-- 로고 영역 -->
+        <div class="logo-area">
+            <img src="/image/logo.png" class="logo" alt="logo">
+            <span class="logo-text">경기도 공매 서비스</span>
+        </div>
+
+        <!-- 네비게이션 -->
+        <nav class="nav">
+            <a href="/">홈</a>
+            <a href="/items">공매 리스트</a>
+            <a href="/guide">입찰 안내</a>
+            <a href="/contact">고객센터</a>
+        </nav>
+
+        <!-- ✅ 로그인 상태별 사용자 영역 -->
+        <div class="user-area" th:if="${session.loginUser == null}">
+            <button class="login-btn" onclick="window.location.href='/user/login'">
+                로그인 / 회원가입
+            </button>
+        </div>
+
+        <div class="user-area" th:if="${session.loginUser != null}">
+            <span class="welcome-text" th:text="${session.loginUser.name + ' 님 환영합니다!'}"></span>
+            <!-- ✅ 찜 목록 버튼 추가 -->
+            <button onclick="window.location.href='/favorite/list'">찜 목록</button>
+            <button class="logout-btn" onclick="window.location.href='/user/logout'">로그아웃</button>
+        </div>
+    </div>
+</header>
+
+
+
+<!-- ✅ HERO BANNER -->
+<section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1>경기도 공매 정보를<br>한곳에서 쉽고 빠르게</h1>
+        <p>실시간 업데이트되는 공매 정보와 입찰 서비스를 제공합니다.</p>
+        <a href="/items" class="cta-btn">공매 리스트 바로가기</a>
+    </div>
+</section>
+
+
+
+<!-- ✅ 서비스 강조 섹션 -->
+<section class="service-highlight">
+    <div class="highlight-grid">
+
+        <div class="highlight-card">
+            <img src="/image/sample.jpg" class="highlight-img">
+            <h3>경기도 전용 공매 정보</h3>
+            <p>불필요한 전국 데이터가 아닌, 경기도 맞춤형 공매 정보만 제공합니다.</p>
+        </div>
+
+        <div class="highlight-card">
+            <img src="/image/sample.jpg" class="highlight-img">
+            <h3>입찰 현황 & 최저가 제공</h3>
+            <p>입찰 일정, 최저입찰가 등 핵심 정보를 직관적으로 확인할 수 있습니다.</p>
+        </div>
+
+        <div class="highlight-card">
+            <img src="/image/sample.jpg" class="highlight-img">
+            <h3>빠른 검색 기능</h3>
+            <p>지역명 또는 물건명으로 바로 검색해 원하는 매물을 즉시 찾을 수 있습니다.</p>
+        </div>
+
+    </div>
+</section>
+
+
+
+<!-- ✅ 최신 공매 리스트 미리보기 -->
+<section class="recent-list-section">
+    <h2>최근 등록된 공매</h2>
+
+    <div class="recent-grid">
+
+        <div class="recent-card">
+            <div class="recent-title">경기도 김포시 대곶면 상마리 269-7</div>
+            <div class="recent-price">최저입찰가 47,599,000원</div>
+            <span class="status status-blue">입찰준비중</span>
+        </div>
+
+        <div class="recent-card">
+            <div class="recent-title">경기도 고양시 일산동구 OO</div>
+            <div class="recent-price">최저입찰가 89,500,000원</div>
+            <span class="status status-green">인터넷입찰</span>
+        </div>
+
+        <div class="recent-card">
+            <div class="recent-title">경기도 부천시 중동 OO</div>
+            <div class="recent-price">최저입찰가 25,200,000원</div>
+            <span class="status status-blue">입찰준비중</span>
+        </div>
+
+    </div>
+
+    <a class="more-list-btn" href="/items">전체 리스트 보기 →</a>
+</section>
+
+
+
+<!-- ✅ FOOTER -->
+<footer class="footer">
+    <p>© 2025 경기도 공매 서비스. All Rights Reserved.</p>
+</footer>
+
+</body>
+</html>

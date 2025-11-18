@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>경기도 공매 리스트</title>
+
+  <link rel="stylesheet" th:href="@{/css/style.css(v=${#dates.createNow().time})}" href="/css/style.css" />
+  
+  <script th:inline="javascript">
+      window.isLoggedIn = /*[[${session.loginUser != null}]]*/ false;
+  </script>
+
+  <script defer th:src="@{/js/script.js(v=${#dates.createNow().time})}" src="/js/script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+<header class="top-header">
+  <h1>🏛 경기도 공매 리스트</h1>
+  <a href="/" style="float:right; margin-top:-40px;">← 메인으로</a>
+
+  <div class="search-box">
+    <input id="searchKeyword" type="text" placeholder="지역 검색 (예: 김포, 고양)" />
+    <button type="button" disabled>검색</button>
+  </div>
+</header>
+
+<main>
+  <div class="item-list">
+    <div class="empty" th:if="${items == null or #lists.isEmpty(items)}">조회된 공매가 없습니다.</div>
+
+    <!-- 카드 리스트 -->
+    <div class="card"
+         th:each="it : ${items}"
+         th:classappend="${it.pbctStatNm} == '인터넷입찰' ? ' status-online' : ' status-ready'"
+         th:attr="data-cltrnm=${it.cltrNm}, data-plnmno=${it.plnmNo}, data-pbctno=${it.pbctNo}">
+
+      <div class="thumb" onclick="openDetail(this.parentElement)">
+        <img th:if="${it.imgUrl != null and it.imgUrl != ''}" th:src="${it.imgUrl}" alt="물건 이미지" />
+        <div th:if="${it.imgUrl == null or it.imgUrl == ''}" class="thumb-fallback">NO IMAGE</div>
+      </div>
+
+      <div class="info" onclick="openDetail(this.parentElement)">
+        <div class="title" th:text="${it.cltrNm}">물건명</div>
+        <div class="addr" th:text="${it.ldnAdrs}">주소</div>
+        <div class="price-row">
+          <span class="label">감정가</span>
+          <span class="price" th:text="${#numbers.formatInteger(it.apslAsesAmt, 3, 'COMMA')} + '원'">0원</span>
+        </div>
+        <div class="price-row">
+          <span class="label">최저입찰가</span>
+          <span class="price min" th:text="${#numbers.formatInteger(it.minBidPrc, 3, 'COMMA')} + '원'">0원</span>
+        </div>
+        <div class="meta">
+          <span class="status-badge" th:text="${it.pbctStatNm}">상태</span>
+          <span class="dates">
+            <span th:text="${it.pbctBegnDtm}">시작</span>
+            <span> ~ </span>
+            <span th:text="${it.pbctClsDtm}">종료</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="card-actions" style="margin-top:10px; text-align:center;">
+        <button type="button" class="favorite-btn"
+                th:attr="data-plnmno=${it.plnmNo}, data-pbctno=${it.pbctNo}"
+                onclick="addFavorite(this)">
+          ⭐ 찜하기
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- 상세 모달 -->
+<div id="detailModal" class="modal" aria-hidden="true">
+  <div class="modal-backdrop" onclick="closeModal()"></div>
+
+  <div class="modal-content" role="dialog" aria-modal="true">
+    <button class="modal-close" aria-label="닫기" onclick="closeModal()">×</button>
+
+    <div class="modal-body">
+      <div class="modal-left">
+        <img id="modal-img" alt="물건 이미지" />
+        <div id="modal-img-fallback" class="thumb-fallback" style="display:none;">NO IMAGE</div>
+
+        <!-- 입찰 내역 3건 테이블 -->
+        <table id="modal-bid-history" style="margin-top:15px; width:100%; border-collapse: collapse;">
+          <thead>
+            <tr>
+              <th style="text-align:left; border-bottom:1px solid #ccc;">입찰 시작</th>
+              <th style="text-align:left; border-bottom:1px solid #ccc;">입찰 마감</th>
+              <th style="text-align:left; border-bottom:1px solid #ccc;">최저입찰가</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- JS에서 채움 -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="modal-right">
+        <h2 id="modal-cltrNm" class="modal-title"></h2>
+
+        <div class="modal-info">
+          <p><strong>주소:</strong> <span id="modal-address"></span></p>
+          <p><strong>감정가:</strong> <span id="modal-appraisal"></span></p>
+          <p><strong>최저입찰가:</strong> <span id="modal-minBid"></span></p>
+          <p><strong>진행상태:</strong> <span id="modal-status"></span></p>
+          <p><strong>입찰 시작:</strong> <span id="modal-begin"></span></p>
+          <p><strong>입찰 마감:</strong> <span id="modal-end"></span></p>
+
+          <!-- webItemDetail의 모든 필드를 동적으로 표시 -->
+          <div id="modal-extra-info"></div>
+        </div>
+
+        <div class="modal-buttons">
+          <button type="button" class="favorite-btn"
+                  id="modal-fav-btn"
+                  onclick="addFavorite(this)">⭐ 찜</button>
+          <button onclick="goBidPage()">입찰하기</button>
+          <button type="button" class="close-btn" onclick="closeModal()">닫기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

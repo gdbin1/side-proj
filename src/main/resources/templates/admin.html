@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 페이지</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #f7f8fa;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .info {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        button {
+            background-color: #3b82f6;
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #2563eb;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🛠 관리자 페이지</h1>
+
+    <div class="info">
+        현재 DB 저장된 공매 데이터 개수: <b th:text="${itemCount}">0</b> 건
+    </div>
+
+    <!-- 통합 데이터 수집 버튼 -->
+    <button id="collectAllBtn" style="background-color:#10b981;">
+        데이터 통합 수집 (기본 + 상세)
+    </button>
+
+    <script>
+        $("#collectAllBtn").click(function () {
+            if (!confirm("정말로 공매 데이터와 상세 데이터를 새로 수집하시겠습니까?")) return;
+
+            $.post("/admin/collect-all", function (response) {
+                alert(response);
+                location.reload();
+            }).fail(function (xhr) {
+                alert("❌ 요청 실패: " + xhr.responseText);
+            });
+        });
+    </script>
+
+</body>
+</html>
