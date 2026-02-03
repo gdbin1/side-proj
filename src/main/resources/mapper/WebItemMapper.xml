@@ -71,18 +71,18 @@
     </delete>
 
     <!-- 일괄 삽입 -->
-    <insert id="insertItems" parameterType="java.util.List">
-        INSERT INTO webItem
-        (plnmNo, pbctNo, cltrNm, ldnAdrs, apslAsesAmt, minBidPrc,
-         pbctBegnDtm, pbctClsDtm, pbctStatNm, imgUrl, onbdUrl)
-        VALUES
-        <foreach collection="list" item="item" separator=",">
-            (#{item.plnmNo}, #{item.pbctNo}, #{item.cltrNm}, #{item.ldnAdrs}, #{item.apslAsesAmt}, #{item.minBidPrc},
-             #{item.pbctBegnDtm}, #{item.pbctClsDtm}, #{item.pbctStatNm}, #{item.imgUrl}, #{item.onbdUrl})
-        </foreach>
-    </insert>
+   <insert id="insertItems">
+  INSERT IGNORE INTO webItem
+  (plnmNo, pbctNo, cltrNm, ldnAdrs, apslAsesAmt, minBidPrc, pbctBegnDtm, pbctClsDtm, pbctStatNm, imgUrl, onbdUrl)
+  VALUES
+  <foreach collection="list" item="item" separator=",">
+    (#{item.plnmNo}, #{item.pbctNo}, #{item.cltrNm}, #{item.ldnAdrs}, #{item.apslAsesAmt}, #{item.minBidPrc},
+     #{item.pbctBegnDtm}, #{item.pbctClsDtm}, #{item.pbctStatNm}, #{item.imgUrl}, #{item.onbdUrl})
+  </foreach>
+</insert>
 
-    <!-- 팝업용 JOIN 데이터 (Controller에서 필요한 필드만 정확히 가져오기) -->
+
+	<!-- 팝업용 JOIN 데이터 (Controller에서 필요한 필드만 정확히 가져오기) -->
     <select id="findItemWithDetails" resultType="map" parameterType="string">
         SELECT 
             w.plnmNo, w.pbctNo, w.cltrNm, w.ldnAdrs, w.apslAsesAmt, w.minBidPrc,
