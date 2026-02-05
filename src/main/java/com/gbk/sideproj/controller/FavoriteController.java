@@ -22,8 +22,8 @@ public class FavoriteController {
      */
     @PostMapping("/add")
     @ResponseBody
-    public String addFavorite(@RequestParam String plnmNo,
-                              @RequestParam String pbctNo,
+    public String addFavorite(@RequestParam("plnmNo") String plnmNo,
+                              @RequestParam("pbctNo") String pbctNo,
                               HttpSession session) {
         User user = (User) session.getAttribute("loginUser");
         if (user == null) {
@@ -53,8 +53,8 @@ public class FavoriteController {
      */
     @PostMapping("/remove")
     @ResponseBody
-    public String removeFavorite(@RequestParam String plnmNo,
-                                 @RequestParam String pbctNo,
+    public String removeFavorite(@RequestParam("plnmNo") String plnmNo,
+                                 @RequestParam("pbctNo") String pbctNo,
                                  HttpSession session) {
         User user = (User) session.getAttribute("loginUser");
         if (user == null) {

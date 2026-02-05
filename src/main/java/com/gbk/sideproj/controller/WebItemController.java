@@ -34,8 +34,8 @@ public class WebItemController {
     @GetMapping("/api/detail")
     @ResponseBody
     public ResponseEntity<Map<String, String>> getDetail(
-            @RequestParam String plnmNo,
-            @RequestParam String pbctNo
+            @RequestParam("plnmNo") String plnmNo,
+            @RequestParam("pbctNo") String pbctNo
     ) {
         Map<String, String> result = new LinkedHashMap<>();
         List<WebItem> items = webItemMapper.findByPkList(plnmNo, pbctNo);
@@ -57,7 +57,7 @@ public class WebItemController {
     @GetMapping("/api/popupDetail")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getPopupDetail(
-            @RequestParam String cltrNm
+            @RequestParam("cltrNm") String cltrNm
     ) {
         Map<String, Object> result = new LinkedHashMap<>();
 
@@ -83,7 +83,7 @@ public class WebItemController {
 
         // ================== 이력 내역 최근 3건 ==================
         List<Map<String, Object>> history = rawResults.stream()
-                .sorted((a, b) -> b.get("pbctBegnDtm").toString().compareTo(a.get("pbctBegnDtm").toString())) // 최신 순
+                .sorted((a, b) -> b.get("pbctBegnDtm").toString().compareTo(a.get("pbctBegnDtm").toString()))
                 .limit(3)
                 .map(h -> {
                     Map<String, Object> map = new LinkedHashMap<>();
